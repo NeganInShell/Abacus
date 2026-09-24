@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="بازی آموزشی ریاضی برای بچه‌های ابتدایی: ضرب، تقسیم، جمع و تفریق با سه تم کارتونی" />
+    <meta name="theme-color" content="#667eea" />
+    <title>🎮 چالش ریاضی — ضرب، تقسیم، جمع، تفریق</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <link rel="stylesheet" href="css/themes.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="چالش ریاضی" />
+  </head>
+  <body>
+    <!-- شخصیت پس‌زمینه هر تم -->
+    <div id="theme-hero" aria-hidden="true"></div>
+
+    <!-- ایموجی‌های شناور تزئینی -->
+    <div id="floaters" aria-hidden="true"></div>
+
+    <main id="app">
+      <!-- ═══ صفحه ورود ═══ -->
+      <section id="login-screen" class="screen active">
+        <h1 class="app-title">🎮 چالش ریاضی</h1>
+        <p class="subtitle">✨ ضرب • تقسیم • جمع • تفریق ✨</p>
+        <p class="subtitle small">برای بچه‌های باهوش و قهرمان‌های ریاضی! 🦸</p>
+
+        <div class="input-group">
+          <label for="username">اسمت چیه؟ 😊</label>
+          <input type="text" id="username" placeholder="مثلاً: محسن" autocomplete="off" maxlength="20" />
+        </div>
+
+        <div class="theme-picker" id="theme-picker">
+          <button class="theme-btn theme-tmnt" data-theme="tmnt" title="لاک‌پشت‌های نینجا">🐢</button>
+          <button class="theme-btn theme-spongebob" data-theme="spongebob" title="باب اسفنجی">🧽</button>
+          <button class="theme-btn theme-batman" data-theme="batman" title="بتمن">🦇</button>
+        </div>
+        <p class="hint">🎯 تم دلخواهت رو انتخاب کن!</p>
+
+        <button id="start-btn" class="primary-btn">🚀 شروع بازی</button>
+        <p class="hint">💡 اسمت رو بنویس، تم رو بزن و شروع کن!</p>
+      </section>
+
+      <!-- ═══ صفحه منو ═══ -->
+      <section id="menu-screen" class="screen">
+        <h1 id="welcome-text">👋 سلام!</h1>
+        <p class="subtitle">آماده‌ای قهرمان ریاضی بشی؟ 🏆</p>
+
+        <div class="menu-buttons">
+          <button class="menu-btn op-multiply" data-op="multiply">
+            <span class="op-icon">✖️</span>
+            <span class="op-label">بازی ضرب</span>
+          </button>
+          <button class="menu-btn op-divide" data-op="divide">
+            <span class="op-icon">➗</span>
+            <span class="op-label">بازی تقسیم</span>
+          </button>
+          <button class="menu-btn op-add" data-op="add">
+            <span class="op-icon">➕</span>
+            <span class="op-label">بازی جمع</span>
+          </button>
+          <button class="menu-btn op-subtract" data-op="subtract">
+            <span class="op-icon">➖</span>
+            <span class="op-label">بازی تفریق</span>
+          </button>
+          <button class="menu-btn op-stats" data-op="stats">
+            <span class="op-icon">📊</span>
+            <span class="op-label">کارنامه و امتیازها</span>
+          </button>
+        </div>
+
+        <p class="hint">💡 یه بازی رو انتخاب کن!</p>
+      </section>
+
+      <!-- ═══ صفحه انتخاب سختی ═══ -->
+      <section id="difficulty-screen" class="screen">
+        <h1 id="difficulty-title">✖️ ضرب</h1>
+        <p class="subtitle" id="difficulty-subtitle">سطح سختی رو انتخاب کن!</p>
+        <div class="difficulty-buttons">
+          <button class="diff-btn diff-easy" data-level="easy">🌱 آسون</button>
+          <button class="diff-btn diff-medium" data-level="medium">🌿 متوسط</button>
+          <button class="diff-btn diff-hard" data-level="hard">🌳 سخت</button>
+          <button class="diff-btn diff-mix" data-level="mix">🎲 مخلوط</button>
+        </div>
+        <button class="back-btn" data-back="menu-screen">← برگشت به منو</button>
+      </section>
+
+      <!-- ═══ صفحه بازی ضرب ═══ -->
+      <section id="multiply-screen" class="screen game-screen">
+        <div class="game-header">
+          <span class="progress" id="multiply-progress">سؤال ۱ از ۱۰</span>
+          <span class="score" id="multiply-score">⭐ ۰</span>
+        </div>
+        <div class="hero-mascot" id="multiply-mascot"></div>
+        <div class="question" id="multiply-question">۵ × ۳ = ؟</div>
+        <div class="options" id="multiply-options"></div>
+        <div class="feedback" id="multiply-feedback"></div>
+        <button class="back-btn" data-back="menu-screen">← برگشت به منو</button>
+        <p class="quit-hint">🚪 با خروج وسط بازی، امتیازت ذخیره می‌شه!</p>
+      </section>
+
+      <!-- ═══ صفحه بازی تقسیم ═══ -->
+      <section id="divide-screen" class="screen game-screen">
+        <div class="game-header">
+          <span class="progress" id="divide-progress">سؤال ۱ از ۱۰</span>
+          <span class="score" id="divide-score">⭐ ۰</span>
+        </div>
+        <div class="hero-mascot" id="divide-mascot"></div>
+        <div class="question" id="divide-question">۱۲ ÷ ۳ = ؟</div>
+        <div class="options" id="divide-options"></div>
+        <div class="feedback" id="divide-feedback"></div>
+        <button class="back-btn" data-back="menu-screen">← برگشت به منو</button>
+        <p class="quit-hint">🚪 با خروج وسط بازی، امتیازت ذخیره می‌شه!</p>
+      </section>
+
+      <!-- ═══ صفحه بازی جمع ═══ -->
+      <section id="add-screen" class="screen game-screen">
+        <div class="game-header">
+          <span class="progress" id="add-progress">سؤال ۱ از ۱۰</span>
+          <span class="score" id="add-score">⭐ ۰</span>
+        </div>
+        <div class="hero-mascot" id="add-mascot"></div>
+        <div class="question" id="add-question">۵ + ۳ = ؟</div>
+        <div class="options" id="add-options"></div>
+        <div class="feedback" id="add-feedback"></div>
+        <button class="back-btn" data-back="menu-screen">← برگشت به منو</button>
+        <p class="quit-hint">🚪 با خروج وسط بازی، امتیازت ذخیره می‌شه!</p>
+      </section>
+
+      <!-- ═══ صفحه بازی تفریق ═══ -->
+      <section id="subtract-screen" class="screen game-screen">
+        <div class="game-header">
+          <span class="progress" id="subtract-progress">سؤال ۱ از ۱۰</span>
+          <span class="score" id="subtract-score">⭐ ۰</span>
+        </div>
+        <div class="hero-mascot" id="subtract-mascot"></div>
+        <div class="question" id="subtract-question">۵ − ۳ = ؟</div>
+        <div class="options" id="subtract-options"></div>
+        <div class="feedback" id="subtract-feedback"></div>
+        <button class="back-btn" data-back="menu-screen">← برگشت به منو</button>
+        <p class="quit-hint">🚪 با خروج وسط بازی، امتیازت ذخیره می‌شه!</p>
+      </section>
+
+      <!-- ═══ صفحه نتیجه ═══ -->
+      <section id="result-screen" class="screen">
+        <div class="result-mascot" id="result-mascot"></div>
+        <h1 id="result-title">🏆 آفرین!</h1>
+        <div class="stars" id="result-stars"></div>
+        <div class="result-box">
+          <div class="result-row">
+            <span>🎯 جواب درست</span><strong id="result-correct">۰</strong>
+          </div>
+          <div class="result-row">
+            <span>❌ جواب غلط</span><strong id="result-wrong">۰</strong>
+          </div>
+          <div class="result-row">
+            <span>📈 درصد</span><strong id="result-percent">۰٪</strong>
+          </div>
+        </div>
+        <p class="result-quote" id="result-quote"></p>
+        <div class="result-actions">
+          <button id="result-again-btn" class="primary-btn">🔄 دوباره!</button>
+          <button id="result-menu-btn" class="back-btn">🏠 منو</button>
+        </div>
+      </section>
+
+      <!-- ═══ صفحه آمار ═══ -->
+      <section id="stats-screen" class="screen">
+        <h1>📊 کارنامه</h1>
+        <p class="subtitle" id="stats-subtitle"></p>
+        <div id="stats-summary" class="stats-summary"></div>
+        <h2 class="stats-sub">📜 تاریخچه بازی‌ها</h2>
+        <ul id="stats-history" class="history-list"></ul>
+        <p class="empty-hint" id="stats-empty">هنوز بازی نکردی! یه بازی شروع کن 🎮</p>
+        <button id="clear-history-btn" class="danger-btn">🗑 پاک کردن تاریخچه</button>
+        <button class="back-btn" data-back="menu-screen">← برگشت به منو</button>
+      </section>
+    </main>
+
+    <!-- جشن کانفتی -->
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <footer class="footer">
+      <p>ساخته شده توسط <strong>محسن تقی‌پور</strong></p>
+    </footer>
+
+    <script src="js/questions.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/sounds.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/games/multiply.js"></script>
+    <script src="js/games/divide.js"></script>
+    <script src="js/games/add.js"></script>
+    <script src="js/games/subtract.js"></script>
+    <script src="js/games/stats.js"></script>
+    <script src="js/app.js"></script>
+    <script src="pwa.js"></script>
+  </body>
+</html>

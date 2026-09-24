@@ -1,0 +1,43 @@
+# دیپلوی خودکار بازی روی گیت‌هاب پیجز
+# هر بار که پوش می‌کنید، سایت به‌روز می‌شود
+
+name: deploy-static
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# فقط یک دیپلوی همزمان — صف قدیمی لغو می‌شود
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: دریافت کد
+        uses: actions/checkout@v4
+
+      - name: تنظیم گیت‌هاب پیجز
+        uses: actions/configure-pages@v5
+
+      # سایت کاملاً استاتیک است — نیازی به build نیست
+      - name: بارگذاری فایل‌های سایت
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: انتشار روی گیت‌هاب پیجز
+        id: deployment
+        uses: actions/deploy-pages@v4
