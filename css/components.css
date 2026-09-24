@@ -259,6 +259,39 @@ button {
   box-shadow: 0 8px 18px rgba(161, 140, 209, 0.35);
 }
 
+/* ─── دکمه‌های جدول اعداد ─── */
+.number-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+  margin: 24px 0;
+}
+
+.number-btn {
+  background: linear-gradient(135deg, var(--accent, #667eea) 0%, var(--accent-2, #764ba2) 100%);
+  color: white;
+  padding: 20px 6px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 15px;
+  transition: all 0.25s;
+  box-shadow: 0 8px 15px var(--accent-shadow, rgba(102, 126, 234, 0.3));
+}
+
+.number-btn:hover {
+  transform: translateY(-5px) scale(1.06);
+}
+
+.number-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.number-mix-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 8px 15px rgba(245, 87, 108, 0.35);
+}
+
 /* ─── دکمه‌های انتخاب سختی ─── */
 .difficulty-buttons {
   display: flex;
@@ -306,51 +339,7 @@ button {
   box-shadow: 0 8px 18px rgba(161, 140, 209, 0.4);
 }
 
-/* ─── دکمه‌های عدد ─── */
-.number-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 11px;
-  margin: 24px 0;
-}
 
-.number-btn {
-  background: linear-gradient(135deg, var(--accent, #667eea) 0%, var(--accent-2, #764ba2) 100%);
-  color: white;
-  padding: 20px 6px;
-  font-size: 1.6rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 15px;
-  transition: all 0.25s;
-  box-shadow: 0 8px 15px var(--accent-shadow, rgba(102, 126, 234, 0.3));
-}
-
-.number-btn:hover {
-  transform: translateY(-5px) scale(1.06);
-}
-
-.number-btn:active {
-  transform: translateY(0) scale(0.95);
-}
-
-.random-btn-full {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-  padding: 17px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 15px;
-  width: 100%;
-  margin-bottom: 6px;
-  transition: all 0.25s;
-  box-shadow: 0 8px 18px rgba(245, 87, 108, 0.3);
-}
-
-.random-btn-full:hover {
-  transform: translateY(-3px);
-}
 
 /* ─── هدر بازی ─── */
 .game-header {
@@ -387,6 +376,8 @@ button {
   color: var(--text, #333);
   margin: 18px 0 26px;
   font-weight: bold;
+  direction: ltr;
+  unicode-bidi: isolate;
   animation: pulse 1.2s infinite alternate;
 }
 
@@ -409,6 +400,8 @@ button {
   border: 3px solid transparent;
   user-select: none;
   -webkit-user-select: none;
+  direction: ltr;
+  unicode-bidi: isolate;
   transition: all 0.2s;
   animation: optionPop 0.35s ease-out backwards;
 }

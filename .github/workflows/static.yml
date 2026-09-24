@@ -29,8 +29,11 @@ jobs:
       - name: دریافت کد
         uses: actions/checkout@v4
 
-      - name: تنظیم گیت‌هاب پیجز
+      - name: تنظیم و فعال‌سازی خودکار گیت‌هاب پیجز
         uses: actions/configure-pages@v5
+        with:
+          # اگر Pages غیرفعال باشد، خودکار فعال می‌شود
+          enablement: true
 
       # سایت کاملاً استاتیک است — نیازی به build نیست
       - name: بارگذاری فایل‌های سایت

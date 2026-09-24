@@ -120,6 +120,8 @@ const UI = {
       const btn = document.createElement('div');
       btn.className = 'option';
       btn.textContent = toFa(option);
+      // عدد گزینه هم چپ‌به‌راست خوانده شود
+      btn.setAttribute('dir', 'ltr');
       btn.dataset.value = option;
       btn.onclick = () => onPick(option, btn);
       box.appendChild(btn);

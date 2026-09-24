@@ -5,7 +5,7 @@
 'use strict';
 
 /* نام حافظه — با تغییر نسخه، حافظه قدیمی پاک می‌شود */
-const CACHE_NAME = 'math-challenge-v2';
+const CACHE_NAME = 'math-challenge-v4';
 
 /* فایل‌های اصلی بازی که همیشه در دسترس باشند */
 const CORE_FILES = [
@@ -34,10 +34,18 @@ const CORE_FILES = [
   './js/games/stats.js',
 ];
 
-/* نصب — کش کردن همه فایل‌های اصلی */
+/* نصب — کش کردن تک‌تک فایل‌ها تا خطای یکی، بقیه را خراب نکند */
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_FILES))
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.all(
+        CORE_FILES.map((url) => {
+          return cache.add(url).catch(() => {
+            /* اگر فایلی در دسترس نبود، نصب ادامه می‌یابد */
+          });
+        })
+      );
+    })
   );
   self.skipWaiting();
 });
@@ -53,6 +61,14 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+
+  // اگر صفحه فرستنده پیام به‌روزرسانی داد، بلافاصله کنترل را بگیر
+  self.addEventListener('message', (event) => {
+    if (event.data === 'SW_UPDATE') {
+      self.skipWaiting();
+    }
+  });
+
   self.clients.claim();
 });
 

@@ -49,18 +49,66 @@ function startGame() {
   UI.showScreen('menu-screen');
 }
 
+/* سختی انتخاب‌شده — قبل از صفحه عدد نگه‌داری می‌شود */
+let pendingDifficulty = null;
+
 function openDifficulty(op) {
   Sounds.click();
   pendingOp = op;
+  pendingDifficulty = null;
   const mod = GAME_MODULES[op];
   document.getElementById('difficulty-title').textContent = mod.TITLE;
   document.getElementById('difficulty-subtitle').textContent = mod.DIFFICULTY_SUBTITLE;
   UI.showScreen('difficulty-screen');
 }
 
-function launchGame(op, difficulty) {
+/**
+ * بعد از انتخاب سختی: ضرب و تقسیم به صفحه عدد می‌روند،
+ * جمع و تفریق مستقیم شروع می‌شوند
+ */
+function afterDifficulty(op, difficulty) {
+  pendingDifficulty = difficulty;
+  if (op === 'multiply' || op === 'divide') {
+    openNumberPicker(op);
+  } else {
+    launchGame(op, difficulty, null);
+  }
+}
+
+/**
+ * صفحه جدول اعداد ۰ تا ۱۰ برای ضرب و تقسیم
+ */
+function openNumberPicker(op) {
+  const mod = GAME_MODULES[op];
+  document.getElementById('number-title').textContent = mod.TITLE;
+  document.getElementById('number-subtitle').textContent =
+    'جدول کدوم عدد رو تمرین کنیم؟';
+
+  const wrap = document.getElementById('number-buttons');
+  wrap.innerHTML = '';
+
+  // اعداد ۰ تا ۱۰ به ترتیب + دکمه مخلوط
+  for (let n = 0; n <= 10; n++) {
+    const btn = document.createElement('button');
+    btn.className = 'number-btn';
+    btn.textContent = toFa(n);
+    btn.onclick = () => launchGame(op, pendingDifficulty, n);
+    wrap.appendChild(btn);
+  }
+
+  const mixBtn = document.createElement('button');
+  mixBtn.className = 'number-btn number-mix-btn';
+  mixBtn.textContent = '🎲';
+  mixBtn.title = 'مخلوط — همه جدول‌ها';
+  mixBtn.onclick = () => launchGame(op, pendingDifficulty, null);
+  wrap.appendChild(mixBtn);
+
+  UI.showScreen('number-screen');
+}
+
+function launchGame(op, difficulty, tableNumber) {
   Sounds.click();
-  Game.start(op, difficulty);
+  Game.start(op, difficulty, tableNumber);
 }
 
 const GAME_QUOTES = {
@@ -93,7 +141,7 @@ function showResult(op, difficulty, score, wrong, total) {
 
   document.getElementById('result-again-btn').onclick = () => {
     Sounds.click();
-    launchGame(op, Game.state.difficulty);
+    launchGame(op, Game.state.difficulty, Game.state.tableNumber);
   };
   document.getElementById('result-menu-btn').onclick = () => {
     Sounds.click();
@@ -152,17 +200,19 @@ function initApp() {
   // دکمه‌های صفحه انتخاب سختی
   document.querySelectorAll('.diff-btn[data-level]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      launchGame(pendingOp, btn.dataset.level);
+      afterDifficulty(pendingOp, btn.dataset.level);
     });
   });
 
   document.querySelectorAll('[data-back]').forEach((btn) => {
     btn.onclick = () => {
       Sounds.click();
-      // اگر وسط بازی هستیم، امتیاز ذخیره و نتیجه نمایش داده می‌شود
-      Game.quit();
-      if (!document.querySelector('.screen.active')) {
-        UI.showScreen('menu-screen');
+      // اگر بازی در جریان است، Game.quit خودش صفحه نتیجه را نشان می‌دهد؛
+      // در غیر این صورت به مقصد مشخص‌شده روی دکمه برمی‌گردیم
+      if (Game.state.active) {
+        Game.quit();
+      } else {
+        UI.showScreen(btn.dataset.back || 'menu-screen');
       }
     };
   });

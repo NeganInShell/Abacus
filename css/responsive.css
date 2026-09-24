@@ -34,15 +34,15 @@
     padding: 18px;
   }
 
-  .number-btn {
-    font-size: 1.35rem;
-    padding: 16px 4px;
-  }
-
   .theme-btn {
     width: 62px;
     height: 62px;
     font-size: 1.7rem;
+  }
+
+  .number-btn {
+    font-size: 1.35rem;
+    padding: 16px 4px;
   }
 
   .menu-btn {

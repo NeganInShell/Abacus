@@ -59,13 +59,14 @@ function pickRandomDifficulty() {
 }
 
 /**
- * ساخت سؤال بر اساس عملگر و سختی
+ * ساخت سؤال بر اساس عملگر، سختی و عدد جدول
  * op: 'multiply' | 'divide' | 'add' | 'subtract'
  * difficulty: 'easy' | 'medium' | 'hard' | 'mix'
- * index: شماره سؤال (برای تمرین هدفمند ضرب و تقسیم)
+ * tableNumber: عدد انتخابی جدول ضرب/تقسیم (۰ تا ۱۰) یا null
+ * index: شماره سؤال
  */
-function generateQuestion(op, difficulty, index) {
-  // در حالت مخلوط، هر سؤال سختی خودش رو دارد
+function generateQuestion(op, difficulty, index, tableNumber) {
+  // در حالت مخلوط، هر سؤال سختی خودش را دارد
   const diff = difficulty === 'mix' ? pickRandomDifficulty() : difficulty;
   const range = DIFFICULTY_RANGE[diff] || 10;
   const max = DIFFICULTY_MAX[diff] || 20;
@@ -77,13 +78,25 @@ function generateQuestion(op, difficulty, index) {
 
   if (op === 'multiply') {
     symbol = '×';
-    a = randInt(0, range);
-    b = randInt(0, range);
+    if (tableNumber === null || tableNumber === undefined) {
+      a = randInt(0, range);
+      b = randInt(0, range);
+    } else {
+      // تمرین جدول یک عدد خاص — عدد دوم از بازه سختی
+      a = tableNumber;
+      b = randInt(0, range);
+    }
     answer = a * b;
   } else if (op === 'divide') {
     symbol = '÷';
-    b = randInt(1, range);
-    answer = randInt(0, range);
+    if (tableNumber === null || tableNumber === undefined) {
+      b = randInt(1, range);
+      answer = randInt(0, range);
+    } else {
+      // تقسیم بر عدد انتخابی — خارج‌قسمت از بازه سختی
+      b = tableNumber === 0 ? 1 : tableNumber; // تقسیم بر صفر نداریم
+      answer = randInt(0, range);
+    }
     a = b * answer; // تضمین اینکه خارج‌قسمت صحیح باشد
   } else if (op === 'add') {
     symbol = '+';

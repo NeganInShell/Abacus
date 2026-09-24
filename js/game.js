@@ -10,6 +10,7 @@ const Game = {
   state: {
     op: null,
     difficulty: null,
+    tableNumber: null,
     current: 0,
     score: 0,
     wrong: 0,
@@ -18,13 +19,18 @@ const Game = {
     active: false,
   },
 
+  /* شمارنده برای باطل کردن تایمرهای بازی قبلی */
+  _timer: null,
+
   /**
    * شروع یک بازی جدید
    */
-  start(op, difficulty) {
+  start(op, difficulty, tableNumber) {
+    this._clearTimer();
     this.state = {
       op: op,
       difficulty: difficulty,
+      tableNumber: tableNumber === undefined ? null : tableNumber,
       current: 0,
       score: 0,
       wrong: 0,
@@ -52,7 +58,7 @@ const Game = {
     s.current++;
     s.canAnswer = true;
 
-    const q = generateQuestion(s.op, s.difficulty, s.current);
+    const q = generateQuestion(s.op, s.difficulty, s.current, s.tableNumber);
     s.answer = q.answer;
 
     const p = document.getElementById(s.op + '-progress');
@@ -60,7 +66,11 @@ const Game = {
     const sc = document.getElementById(s.op + '-score');
     if (sc) sc.textContent = `⭐ ${toFa(s.score)}`;
     const qEl = document.getElementById(s.op + '-question');
-    if (qEl) qEl.textContent = q.text;
+    if (qEl) {
+      qEl.textContent = q.text;
+      // عبارت ریاضی همیشه چپ‌به‌راست نمایش داده شود
+      qEl.setAttribute('dir', 'ltr');
+    }
 
     UI.renderOptions(s.op + '-options', generateOptions(q.answer), (option, btn) => {
       this.pick(option, btn);
@@ -86,7 +96,7 @@ const Game = {
         feedback.className = 'feedback correct';
       }
       Sounds.correct();
-      setTimeout(() => this.nextQuestion(), 1100);
+      this._setTimer(() => this.nextQuestion(), 1100);
     } else {
       s.wrong++;
       btn.classList.add('wrong');
@@ -101,7 +111,7 @@ const Game = {
         });
       }
       Sounds.wrong();
-      setTimeout(() => this.nextQuestion(), 1400);
+      this._setTimer(() => this.nextQuestion(), 1400);
     }
 
     const sc = document.getElementById(s.op + '-score');
@@ -114,6 +124,7 @@ const Game = {
   finish() {
     const s = this.state;
     s.active = false;
+    this._clearTimer();
 
     Storage.addRecord(s.op, s.difficulty, s.score, this.TOTAL_QUESTIONS);
     showResult(s.op, s.difficulty, s.score, s.wrong, this.TOTAL_QUESTIONS);
@@ -126,12 +137,30 @@ const Game = {
     const s = this.state;
     if (!s.active) return;
     s.active = false;
+    this._clearTimer();
 
     if (s.current > 0) {
       Storage.addRecord(s.op, s.difficulty, s.score, this.TOTAL_QUESTIONS);
       showResult(s.op, s.difficulty, s.score, s.wrong, this.TOTAL_QUESTIONS);
     } else {
       UI.showScreen('menu-screen');
+    }
+  },
+
+  /**
+   * زمان‌بندی رفتن به سؤال بعد — با امکان باطل شدن
+   */
+  _setTimer(fn, ms) {
+    this._timer = setTimeout(fn, ms);
+  },
+
+  /**
+   * باطل کردن تایمر در انتظار (موقع خروج یا شروع دوباره)
+   */
+  _clearTimer() {
+    if (this._timer) {
+      clearTimeout(this._timer);
+      this._timer = null;
     }
   },
 };
